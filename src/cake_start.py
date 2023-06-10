@@ -12,8 +12,8 @@ class CakeStart:
 
     def __construct_cake(self, message_body) -> str:
         cake_list = list(self.node_address_list[1:])
-        cake_list = [self.address, *cake_list]
         cake_list.append(message_body)
+        cake_list = [self.address, *cake_list]
         return ';'.join(cake_list)
 
     @staticmethod
@@ -43,9 +43,8 @@ class CakeStart:
         sock = socket.socket(socket.AF_INET,
                              socket.SOCK_DGRAM)
         sock.bind(self.__parse_udp_address(self.address))
-        while True:
-            data, addr = sock.recvfrom(1024)
-            print("received message: %s" % data)
+        data, addr = sock.recvfrom(1024)
+        print("received message: %s" % data)
 
 
 if __name__ == '__main__':
