@@ -16,24 +16,27 @@ class CakeEnd:
             cake)
         return message
 
-    def start(self) -> str:
+    def handle_message(self):
         cake = utils.await_udp_message(self.address)
         message = self.__peel_cake(cake)
         utils.send_udp_message(self.return_address, b'ACK')
         if self.debug:
             print("Message acquired: ", message)
-        return message
+
+    def start(self):
+        while True:
+            self.handle_message()
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        prog='ProgramName',
-        description='What the program does',
-        epilog='Text at the bottom of help')
+        prog='TCR (The Cake Router) end node',
+        description='Waits for a message, then delivers an \'ACK\' back to the node it got the message from.',
+        epilog='')
     parser.add_argument('address')
-    # parser.add_argument('-d', '--debug',
-    #                     action='debug_on')  # on/off flag
+    parser.add_argument('-d', '--debug',
+                        action='store_true')
     args = parser.parse_args()
 
-    cn = CakeEnd(args.address, True)
-    cn.start()
+    ce = CakeEnd(args.address, args.debug)
+    ce.start()

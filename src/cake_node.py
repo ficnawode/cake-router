@@ -23,28 +23,32 @@ class CakeNode:
         cake = utils.string_to_bytes(cake)
         return next_address, cake
 
-    def send_further(self, cake):
+    def handle_message(self):
+        cake = utils.await_udp_message(self.address)
         address, cake = self.__peel_cake(cake)
         utils.send_udp_message(address, cake)
         if self.debug:
             print("cake sent:", cake, "to", address)
-
-    def start(self):
-        cake = utils.await_udp_message(self.address)
-        self.send_further(cake)
         response = utils.await_udp_message(self.address)
         utils.send_udp_message(self.return_address, response)
+        if self.debug:
+            print("response sent:", response, "to", self.return_address)
+            print("\n")
+
+    def start(self):
+        while True:
+            self.handle_message()
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        prog='ProgramName',
-        description='What the program does',
-        epilog='Text at the bottom of help')
+        prog='TCR (The Cake Router) intermediate node',
+        description='Allows a message to pass through the address given as an argument.',
+        epilog='')
     parser.add_argument('address')
-    # parser.add_argument('-d', '--debug',
-    #                     action='debug_on')  # on/off flag
+    parser.add_argument('-d', '--debug',
+                        action='store_true')
     args = parser.parse_args()
 
-    cn = CakeNode(args.address, True)
+    cn = CakeNode(args.address, args.debug)
     cn.start()

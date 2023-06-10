@@ -42,13 +42,16 @@ def find_udp_address(cake: str) -> Tuple[UDPAddress, str]:
 
 def send_udp_message(address: UDPAddress, message_body: bytes):
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # UDP
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     s.sendto(message_body, (address.IP, address.PORT))
+    s.close()
 
 
 def await_udp_message(address: UDPAddress) -> bytes:
     s = socket.socket(socket.AF_INET,
                       socket.SOCK_DGRAM)
-    address = (address.IP, address.PORT)
-    s.bind(address)
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    s.bind((address.IP, address.PORT))
     data = s.recvfrom(1024)[0]
+    s.close()
     return data
