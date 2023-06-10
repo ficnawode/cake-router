@@ -1,6 +1,4 @@
 import argparse
-import socket
-import re
 from typing import Tuple
 
 import cake_utils as utils

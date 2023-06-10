@@ -1,6 +1,5 @@
 
-import socket
-import re
+import argparse
 
 import cake_utils as utils
 
@@ -31,6 +30,17 @@ class CakeStart:
 
 
 if __name__ == '__main__':
-    cc = CakeStart('helo', 'localhost:9000', ['localhost:9001', 'localhost:9002',
-                                              'localhost:9003'], debug=True)
+    parser = argparse.ArgumentParser(
+        prog='TCR (The Cake Router) start node',
+        description='Takes a message and address list, assembles a layered message (cake) and sends it to the next node on the list.',
+        epilog='')
+    parser.add_argument('message')
+    parser.add_argument('address')
+    parser.add_argument('address_list', nargs='+')
+    parser.add_argument('-d', '--debug',
+                        action='store_true')
+    args = parser.parse_args()
+
+    cc = CakeStart(args.message, args.address,
+                   args.address_list, debug=args.debug)
     cc.start()
