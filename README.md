@@ -42,7 +42,11 @@ The program is developed entirely in vanilla python, using only `argparse`, `soc
 To see what is happening underneath, add the `--debug` flag at the end of any of these commands (see below).
 
 # Working Example
-![](docs/working_example.gif)
 
+In this case there is one start node on `localhost:9000`, two intermediate nodes on `localhost` ports `9001` and `9002` and one end node on `localhost:9003`.
+
+We turn them on from back to front and we're ready to transmit information. The start node just sends the message 'helo' and gets back an 'ACK' back through the chain.
+ 
+![](docs/working_example.gif)
 
 Made for educational purposes.
